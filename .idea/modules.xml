@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Java_ORM_JPA_Programming_jpql.iml" filepath="$PROJECT_DIR$/Java_ORM_JPA_Programming_jpql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jpql.iml" filepath="$PROJECT_DIR$/jpql.iml" />
+    </modules>
+  </component>
+</project>
