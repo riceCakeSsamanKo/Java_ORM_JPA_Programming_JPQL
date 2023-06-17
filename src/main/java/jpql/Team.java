@@ -17,7 +17,7 @@ public class Team {
     private Long id;
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
     private List<Member> members = new ArrayList<>();
 
     @Override

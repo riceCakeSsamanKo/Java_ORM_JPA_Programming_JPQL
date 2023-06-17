@@ -14,25 +14,37 @@ public class JpqlMain {
         tx.begin();
 
         try {
-            for(int i=0;i<5;i++){
-                Team team = new Team();
-                team.setName("team"+i);
+            Team team = new Team();
+            team.setName("teamA");
 
-                Member member = new Member();
-                member.setUsername("member" + i);
-                member.changeTeam(team);
+            Member member = new Member();
+            member.setUsername("memberA");
+            member.setAge(10);
+            member.setType(MemberType.ADMIN);
+            member.setTeam(team);
 
-                em.persist(team);
-            }
+            Member member2 = new Member();
+            member2.setUsername("memberB");
+            member2.setAge(20);
+            member2.setType(MemberType.ADMIN);
+            member2.setTeam(team);
 
-            // 세타 조인: Member와 Team을 모두 가져온 다음 그중 where문의 조건에 맞는 것들만 추림
-            String query = "select m, t from Member m left join m.team t on t.name = 'team3'";
-             em.createQuery(query)
+            em.persist(member);
+            em.persist(member2);
+
+            em.flush();
+            em.clear();
+
+            String query = "select m, 'HELLO', true From Member m  " +
+                            "where m.type =  jpql.MemberType.ADMIN";
+            List<Object[]> result = em.createQuery(query)
                     .getResultList();
 
-            System.out.println(result.get(0));
-
-
+            for (Object[] objects : result) {
+                System.out.println("objects = " + objects[0]);
+                System.out.println("objects = " + objects[1]);
+                System.out.println("objects = " + objects[2]);
+            }
             tx.commit();
         } catch (Exception e) {
             tx.rollback(); // 오류 발생 시 롤백
