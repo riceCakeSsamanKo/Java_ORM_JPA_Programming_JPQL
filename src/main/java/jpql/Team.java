@@ -3,6 +3,7 @@ package jpql;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class Team {
             member.changeTeam(this);
         }
     }
+    @BatchSize(size = 100)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
     private List<Member> members = new ArrayList<>();
 

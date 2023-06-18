@@ -3,15 +3,9 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-<<<<<<< Updated upstream
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-=======
-      <profile name="Annotation profile for jpql" enabled="true">
-        <sourceOutputDir name="../Java_ORM_JPA_Programming_jpql/target/generated-sources/annotations" />
-        <sourceTestOutputDir name="../Java_ORM_JPA_Programming_jpql/target/generated-test-sources/test-annotations" />
->>>>>>> Stashed changes
         <outputRelativeToContentRoot value="true" />
         <module name="jpql" />
       </profile>

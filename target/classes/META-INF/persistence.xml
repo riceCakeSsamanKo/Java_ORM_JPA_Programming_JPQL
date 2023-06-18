@@ -15,8 +15,11 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>
+            <property name="hibernate.jdbc.batch_size" value="10"/>
             <!--create == 테이블이 드랍후 새로 생성됨-->
             <property name="hibernate.hbm2ddl.auto" value="create" />
+            <!--@BatchSize(size=100)을 디폴트 옵션으로 지정해놓음. 따로 @BatchSize 어노테이션 필요 없음-->
+            <property name="hibernate.default_batch_fetch_size" value="100"/>
         </properties>
     </persistence-unit>
 </persistence>

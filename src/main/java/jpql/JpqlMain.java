@@ -38,15 +38,15 @@ public class JpqlMain {
             em.persist(teamB);
             em.persist(teamC);
 
-<<<<<<< HEAD
-            // 세타 조인: Member와 Team을 모두 가져온 다음 그중 where문의 조건에 맞는 것들만 추림
-            String query = "select m, t from Member m left join m.team t on t.name = 'team3'";
-            List result = em.createQuery(query)
-=======
-            String query = "select t from Team t join fetch t.members";
+
+            String query = "select t from Team t ";
             List<Team> teams = em.createQuery(query, Team.class)
->>>>>>> bbc03cc79b4ee58dad4e3c78bcc8389447cc5300
+                    .setFirstResult(0)
+                    .setMaxResults(2)
                     .getResultList();
+
+            System.out.println("teams = " + teams.size());
+
 
             for (Team team : teams) {
                 //페치 조인으로 회원과 팀을 함께 조회해서 지연 로딩X
