@@ -27,7 +27,7 @@ public class JpqlMain {
 
             // 세타 조인: Member와 Team을 모두 가져온 다음 그중 where문의 조건에 맞는 것들만 추림
             String query = "select m, t from Member m left join m.team t on t.name = 'team3'";
-             em.createQuery(query)
+            List result = em.createQuery(query)
                     .getResultList();
 
             System.out.println(result.get(0));
