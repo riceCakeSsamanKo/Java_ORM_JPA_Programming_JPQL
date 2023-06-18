@@ -5,8 +5,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class JpqlMain {
+    static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
         EntityManager em = emf.createEntityManager();
@@ -14,37 +17,37 @@ public class JpqlMain {
         tx.begin();
 
         try {
-            Team team = new Team();
-            team.setName("teamA");
-
-            Member member = new Member();
-            member.setUsername("memberA");
-            member.setAge(10);
-            member.setType(MemberType.ADMIN);
-            member.setTeam(team);
-
+            Member member1 = new Member();
             Member member2 = new Member();
-            member2.setUsername("memberB");
-            member2.setAge(20);
-            member2.setType(MemberType.ADMIN);
-            member2.setTeam(team);
+            Member member3 = new Member();
+            member1.setUsername("회원1");
+            member2.setUsername("회원2");
+            member3.setUsername("회원3");
 
-            em.persist(member);
-            em.persist(member2);
+            Team teamA = new Team();
+            Team teamB = new Team();
+            Team teamC = new Team();
+            teamA.setName("팀A");
+            teamB.setName("팀B");
+            teamC.setName("팀C");
 
-            em.flush();
-            em.clear();
+            member1.changeTeam(teamA);
+            member2.changeTeam(teamA);
+            member3.changeTeam(teamB);
+            em.persist(teamA);
+            em.persist(teamB);
+            em.persist(teamC);
 
-            String query = "select m, 'HELLO', true From Member m  " +
-                            "where m.type =  jpql.MemberType.ADMIN";
-            List<Object[]> result = em.createQuery(query)
+            String query = "select t from Team t join fetch t.members";
+            List<Team> teams = em.createQuery(query, Team.class)
                     .getResultList();
 
-            for (Object[] objects : result) {
-                System.out.println("objects = " + objects[0]);
-                System.out.println("objects = " + objects[1]);
-                System.out.println("objects = " + objects[2]);
+            for (Team team : teams) {
+                //페치 조인으로 회원과 팀을 함께 조회해서 지연 로딩X
+                System.out.println("teamName = " + team.getName() + " team.members= "+team.getMembers().size());
+
             }
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback(); // 오류 발생 시 롤백
@@ -55,3 +58,5 @@ public class JpqlMain {
         emf.close();
     }
 }
+
+
