@@ -17,42 +17,25 @@ public class JpqlMain {
         tx.begin();
 
         try {
-            Member member1 = new Member();
-            Member member2 = new Member();
-            Member member3 = new Member();
-            member1.setUsername("회원1");
-            member2.setUsername("회원2");
-            member3.setUsername("회원3");
+            Member member1 = new Member("회원 1", 20);
+            Member member2 = new Member("회원 2", 40);
+            Member member3 = new Member("회원 3", 60);
+            em.persist(member1);
+            em.persist(member2);
+            em.persist(member3);
 
-            Team teamA = new Team();
-            Team teamB = new Team();
-            Team teamC = new Team();
-            teamA.setName("팀A");
-            teamB.setName("팀B");
-            teamC.setName("팀C");
+            // 모든 member의 age를 100으로 update
+            String query = "update Member m set m.age = 100";
+            int i = em.createQuery(query).executeUpdate(); //executeUpdate()로 벌크 연산, i는 update된 row의 수
 
-            member1.changeTeam(teamA);
-            member2.changeTeam(teamA);
-            member3.changeTeam(teamB);
-            em.persist(teamA);
-            em.persist(teamB);
-            em.persist(teamC);
+            Member findMember = em.find(Member.class, member1.getId());
+            System.out.println("findMember = " + findMember.getAge());  // 영속성 컨텍스트의 내용이 DB와 다른 값이 출력
+            // 영속성 컨텍스트 비우기
+            em.clear();
 
-
-            String query = "select t from Team t ";
-            List<Team> teams = em.createQuery(query, Team.class)
-                    .setFirstResult(0)
-                    .setMaxResults(2)
-                    .getResultList();
-
-            System.out.println("teams = " + teams.size());
-
-
-            for (Team team : teams) {
-                //페치 조인으로 회원과 팀을 함께 조회해서 지연 로딩X
-                System.out.println("teamName = " + team.getName() + " team.members= "+team.getMembers().size());
-
-            }
+            // 영속성 컨텍스트가 비워져 있으니 DB에 먼저 접근 후 영속성 컨텍스트 초기화
+            Member findMember2 = em.find(Member.class, member1.getId());
+            System.out.println("findMember = " + findMember2.getAge()); // DB와 같은 값이 출력
 
             tx.commit();
         } catch (Exception e) {

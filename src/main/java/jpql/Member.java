@@ -11,9 +11,14 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@NamedQuery( // 쿼리문을 미리 정의해둠.
+        name = "Member.findByUsername",  // 아래 query 내용을 직접 입력하지 않고도 Member.findByUsername으로 대치해서 사용이 가능함.
+        query = "select m from Member m where m.username = :username"  // 프로그램 로딩시 쿼리문에 문제가 있다면 에러 발생(검증가능)
+)
 public class Member {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
     @Column(name = "USERNAME")
     private String username;
