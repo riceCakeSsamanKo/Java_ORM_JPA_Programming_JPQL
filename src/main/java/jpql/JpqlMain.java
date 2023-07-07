@@ -5,7 +5,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class JpqlMain {
@@ -17,25 +16,28 @@ public class JpqlMain {
         tx.begin();
 
         try {
-            Member member1 = new Member("회원 1", 20);
-            Member member2 = new Member("회원 2", 40);
-            Member member3 = new Member("회원 3", 60);
-            em.persist(member1);
-            em.persist(member2);
-            em.persist(member3);
+            for (int i = 0; i < 3; i++) {
+                Member member = new Member();
+                member.setUsername(""+i);
+                member.setAge(i);
+                em.persist(member);
 
-            // 모든 member의 age를 100으로 update
-            String query = "update Member m set m.age = 100";
-            int i = em.createQuery(query).executeUpdate(); //executeUpdate()로 벌크 연산, i는 update된 row의 수
+                Team team = new Team();
+                team.setName(""+i);
+                em.persist(team);
 
-            Member findMember = em.find(Member.class, member1.getId());
-            System.out.println("findMember = " + findMember.getAge());  // 영속성 컨텍스트의 내용이 DB와 다른 값이 출력
-            // 영속성 컨텍스트 비우기
-            em.clear();
+            }
 
-            // 영속성 컨텍스트가 비워져 있으니 DB에 먼저 접근 후 영속성 컨텍스트 초기화
-            Member findMember2 = em.find(Member.class, member1.getId());
-            System.out.println("findMember = " + findMember2.getAge()); // DB와 같은 값이 출력
+            List<Object[]> resultList = em.createQuery("select m, t from Member m left join Team t on m.username = t.name").getResultList();
+            for (Object[] o: resultList) {
+                System.out.println("member = " + o[0]);
+                System.out.println("team = " + o[1]);
+            }  //Member와 Team이 연관관계는 없어도 join을 통해서 같이 가져옴
+
+            List<Member> resultList2 = em.createQuery("select m from Member m left join Team t on m.username = t.name",Member.class).getResultList();
+            for (Member m: resultList2) {
+                System.out.println("m.getTeam() = " + m.getTeam());
+            } //m.getTeam() == Null => 연관관계 없음
 
             tx.commit();
         } catch (Exception e) {
